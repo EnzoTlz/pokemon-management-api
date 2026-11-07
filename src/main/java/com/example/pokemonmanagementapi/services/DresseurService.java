@@ -1,5 +1,6 @@
 package com.example.pokemonmanagementapi.services;
 
+import com.example.pokemonmanagementapi.dto.DresseurDto;
 import com.example.pokemonmanagementapi.entities.DresseurEntity;
 import com.example.pokemonmanagementapi.entities.PokemonEntity;
 import com.example.pokemonmanagementapi.repositories.DresseurRepository;
@@ -54,5 +55,18 @@ public class DresseurService implements IDresseurService {
     @Override
     public boolean exist(Long id) {
         return repository.existsById(id);
+    }
+
+    @Override
+    public DresseurDto getDresseurDto(Long id) {
+        DresseurEntity dresseur = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Dresseur introuvable"));
+
+        DresseurDto dto = new DresseurDto();
+        dto.setNomDresseur(dresseur.getNom());
+        dto.setNombrePokemons(dresseur.getPokemons().size());
+        dto.setNiveauDresseur(calculerNiveauDresseur(id));
+
+        return dto;
     }
 }
